@@ -1,26 +1,40 @@
 # Smart City Parking
 
-## Google Maps API Keys
+The Smart City Parking project is a comprehensive solution designed to enhance urban parking management through the integration of IoT devices on parking lots to monitor parking availability and provide real-time data to users. The project includes a web application for users to find available parking spots, a backend server for data processing, and a database for storing parking information.
 
-### API Key
+![Final Architecture](Presentations/images/architecture.png)
 
-Αρχικά χρειάζεται να εκδοθεί ένα API key που βγαίνει από την google.
+*Figure 1: Final architecture of the Smart City Parking project.*
 
-### Map Id
+## Sensor Simulation
 
-Το mapId βγαίνει επίσης από τη google και περιορίζεται μόνο σε ένα API key. Το Map Id βγαίνει στην καρτέλα Map Management και μπορεί να μπει 
-ένα Style στο Map Styles.
+The project simulates 794 sensors in different parking spots around the city of Patras. Depending on the time of day and the day of the week, we assume different occupancy rates and update the parking availability of each sensor accordingly. We also simulate the temperature that would be reported by the sensor in the parking lot. The temperature is simulated based on the time of day and the shadow of the parking lot via the ShadeMap API.
 
-![Map Id](./Presentations/images/map-id.png)
+![ShadeMap Simulation](src/simulation/shadows/shadows-video/shadows.gif)
 
-### Navigation
+*Figure 2: Visualization of simulated shadow data using the ShadeMap API. Sensors that have shaded are drawn in green and sensors without red.*
 
-Η εφαρμογή κατά την πλοήγηση εντοπίζει την τωρινή τοποθεσία και εμφανίζει την διαδρομή. Για να γίνει αυτό χρησιμοποιείται το navigator.geolocation api του browser. Αυτό ελέγχει αυτόματα την θέση με βάση το gps αν είναι διαθέσιμο ή τη διεύθυνση ip με λιγότερη ακρίβεια αν δεν είναι διαθέσιμο.
+## IoT Agents
 
-Για να τρέξει η προσομοίωση πρέπει να τρέχουν ταυτόχρονα τα  προγράμματα Iot_Agent.py, simulate.py, influx Agent και ο server.
+The data of the sensors are sent to a context broker and to the backend server via MQTT. Additionally, the IoT agents send the data to an Influx DB instance for visualization via Grafana.
 
-### Smart Data Models
+## Web Application
 
-Για τη μορφή των δεδομένων χρησιμοποιήθηκαν [smart Data Models](https://github.com/smart-data-models/dataModel.Parking/blob/master/OnStreetParking/doc/spec.md)
-σχετικά με το onstreet parking
+We also provide a web application that allows users to see and search for an available parking spot in the area. Using the Google Maps API, we can guide the user to the desired parking spot. The web app also has a dashboard panel for an admin to monitor the sensors and see aggregated data about the parking spots, such as average occupancy and average temperature.
 
+![Frontpage](Presentations/images/frontpage.png)
+![Selection](Presentations/images/select.png)
+![Search](Presentations/images/search.png)
+![Nav](Presentations/images/nav.png)
+![Admin Dashboard](Presentations/images/admin.png)
+
+*Figure 3: Screenshots of the web application. The first image shows the front page, the second image shows the selection of a parking spot, the third image shows the search for a parking spot, the fourth image shows the navigation to a parking spot, and the last image shows the admin dashboard.*
+
+## Backend Server
+
+The backend server, made with node.js, is responsible for processing the data from the sensors and providing it to the web application. It also handles user authentication and authorization, as well as the communication with the database.
+
+It processes and visualizes aggregate data from the sensors and handles alerts for illegal parking.
+
+![Current Temperature](Presentations/images/curr-temp.png)
+![Average Occupancy](Presentations/images/av-occ.png)
